@@ -37,7 +37,7 @@ public class Cuenta {
     this.setSaldo(getSaldo() - cuanto);
   }
 
-  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
+  public void agregarMovimiento(LocalDate fecha, double cuanto, Boolean esDeposito) {
     Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
     movimientos.add(movimiento);
   }
@@ -80,7 +80,7 @@ public class Cuenta {
     }
   }
 
-  
+
 
   public List<Movimiento> getMovimientos() {
     return movimientos;
