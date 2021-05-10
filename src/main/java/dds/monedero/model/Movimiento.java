@@ -1,19 +1,20 @@
 package dds.monedero.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Movimiento {
   private LocalDate fecha;
-  private double monto;
+  private BigDecimal monto;
   private Boolean esDeposito;
 
-  public Movimiento(LocalDate fecha, double monto, Boolean esDeposito) {
+  public Movimiento(LocalDate fecha, BigDecimal monto, Boolean esDeposito) {
     this.fecha = fecha;
     this.monto = monto;
     this.esDeposito = esDeposito;
   }
 
-  public double getMonto() {
+  public BigDecimal getMonto() {
     return monto;
   }
 
