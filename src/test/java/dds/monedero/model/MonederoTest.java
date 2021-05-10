@@ -8,8 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MonederoTest {
   private Cuenta cuenta;
@@ -22,7 +21,10 @@ public class MonederoTest {
   @Test
   @DisplayName("si se ingresa un monto valido todo esta ok")
   void Poner() {
-    assertDoesNotThrow(() -> cuenta.poner(1500));
+    cuenta.poner(1500);
+    assertEquals(1500, cuenta.getSaldo());
+    assertEquals(true, cuenta.getMovimientos().get(0).isDeposito());
+    assertEquals(1500, cuenta.getMovimientos().get(0).getMonto());
   }
 
   @Test
@@ -34,11 +36,11 @@ public class MonederoTest {
   @Test
   @DisplayName("si se ingresan 3 montos validos todo esta ok")
   void TresDepositos() {
-    assertDoesNotThrow(() -> {
-      cuenta.poner(1500);
-      cuenta.poner(456);
-      cuenta.poner(1900);
-    });
+    cuenta.poner(1500);
+    cuenta.poner(456);
+    cuenta.poner(1900);
+    assertEquals(3856, cuenta.getSaldo());
+    assertEquals(3, cuenta.getMovimientos().size());
   }
 
   @Test
@@ -50,6 +52,17 @@ public class MonederoTest {
           cuenta.poner(1900);
           cuenta.poner(245);
     });
+    assertEquals(3856, cuenta.getSaldo());
+    assertEquals(3, cuenta.getMovimientos().size());
+  }
+
+  @Test
+  @DisplayName("si se extrae un monto valido todo esta ok")
+  void Extraer() {
+    cuenta.poner(1000);
+    cuenta.sacar(500);
+    assertEquals(500, cuenta.getSaldo());
+    assertEquals(2, cuenta.getMovimientos().size());
   }
 
   @Test
