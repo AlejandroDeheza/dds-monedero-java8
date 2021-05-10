@@ -22,10 +22,6 @@ public class Cuenta {
     saldo = montoInicial;
   }
 
-  public void setMovimientos(List<Movimiento> movimientos) {
-    this.movimientos = movimientos;
-  }
-
   public void poner(double cuanto) {
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
@@ -35,7 +31,8 @@ public class Cuenta {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
 
-    new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
+    this.agregarMovimiento(LocalDate.now(), cuanto, true);
+    this.setSaldo(getSaldo() + cuanto);
   }
 
   public void sacar(double cuanto) {
@@ -51,7 +48,9 @@ public class Cuenta {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
           + " diarios, límite: " + limite);
     }
-    new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
+
+    this.agregarMovimiento(LocalDate.now(), cuanto, false);
+    this.setSaldo(getSaldo() - cuanto);
   }
 
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
@@ -68,6 +67,10 @@ public class Cuenta {
 
   public List<Movimiento> getMovimientos() {
     return movimientos;
+  }
+
+  public void setMovimientos(List<Movimiento> movimientos) {
+    this.movimientos = movimientos;
   }
 
   public double getSaldo() {
