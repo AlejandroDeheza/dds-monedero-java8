@@ -87,10 +87,6 @@ public class Cuenta {
     return new BigDecimal(1000).subtract(getMontoExtraidoA(LocalDate.now()));
   }
 
-  public void setMovimientos(List<Movimiento> movimientos) {
-    this.movimientos = movimientos;
-  }
-
   public List<Movimiento> getMovimientos() {
     return movimientos;
   }
