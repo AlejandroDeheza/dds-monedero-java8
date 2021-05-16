@@ -1,7 +1,7 @@
 package dds.monedero.model;
 
 import dds.monedero.exceptions.MaximaCantidadDepositosException;
-import dds.monedero.exceptions.MaximoExtraccionDiarioException;
+import dds.monedero.exceptions.MaximoExtraccionDiariaException;
 import dds.monedero.exceptions.MontoNegativoException;
 import dds.monedero.exceptions.SaldoMenorException;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +71,7 @@ public class MonederoTest {
   @DisplayName("si se extrae mas de lo que se tiene se genera SaldoMenorException")
   void ExtraerMasQueElSaldo() {
     assertThrows(SaldoMenorException.class, () -> {
-          cuenta.setSaldo(new BigDecimal(90));
+          cuenta.poner(new BigDecimal(90));
           cuenta.sacar(new BigDecimal(1001));
     });
   }
@@ -79,8 +79,8 @@ public class MonederoTest {
   @Test
   @DisplayName("si se extraen mas de 1000 se genera MaximoExtraccionDiarioException")
   public void ExtraerMasDe1000() {
-    assertThrows(MaximoExtraccionDiarioException.class, () -> {
-      cuenta.setSaldo(new BigDecimal(5000));
+    assertThrows(MaximoExtraccionDiariaException.class, () -> {
+      cuenta.poner(new BigDecimal(5000));
       cuenta.sacar(new BigDecimal(1001));
     });
   }

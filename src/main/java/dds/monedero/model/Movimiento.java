@@ -13,7 +13,7 @@ public abstract class Movimiento {
   }
 
   public Boolean esDeLaFecha(LocalDate fecha) {
-    return this.fecha.equals(fecha);
+    return this.getFecha().equals(fecha);
   }
 
   public Boolean fueDepositado(LocalDate fecha) {
