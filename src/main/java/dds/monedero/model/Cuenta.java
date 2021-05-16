@@ -13,7 +13,7 @@ import java.util.List;
 public class Cuenta {
 
   private BigDecimal saldo;
-  private List<Movimiento> movimientos = new ArrayList<>();
+  private final List<Movimiento> movimientos = new ArrayList<>();
 
   public Cuenta() {
     saldo = new BigDecimal(0);
@@ -21,6 +21,14 @@ public class Cuenta {
 
   public Cuenta(BigDecimal montoInicial) {
     saldo = montoInicial;
+  }
+
+  public List<Movimiento> getMovimientos() {
+    return movimientos;
+  }
+
+  public BigDecimal getSaldo() {
+    return saldo;
   }
 
   public void poner(BigDecimal cuanto) {
@@ -41,13 +49,6 @@ public class Cuenta {
     validaciones.run();
     movimientos.add(movimiento);
     this.setSaldo(saldoCorrespondiente);
-  }
-
-  public BigDecimal getMontoExtraidoA(LocalDate fecha) {
-    return getMovimientos().stream()
-        .filter(movimiento -> movimiento.fueExtraido(fecha))
-        .map(Movimiento::getMonto)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   private void validarQueNoSupereMaximaCantidadDepositosDiarios() {
@@ -74,8 +75,8 @@ public class Cuenta {
 
   private void validarQueNoSupereExtracionDiariaMaxima(BigDecimal cuanto) {
     if (cuanto.compareTo(limiteExtraccionActual()) > 0) {
-      throw new MaximoExtraccionDiariaException("No puede extraer mas de $ " + 1000
-          + " diarios, límite: " + limiteExtraccionActual());
+      throw new MaximoExtraccionDiariaException("No puede extraer mas de $ " + 1000 + " diarios, " +
+          "límite: " + limiteExtraccionActual());
     }
   }
 
@@ -83,16 +84,15 @@ public class Cuenta {
     return new BigDecimal(1000).subtract(getMontoExtraidoA(LocalDate.now()));
   }
 
+  private BigDecimal getMontoExtraidoA(LocalDate fecha) {
+    return getMovimientos().stream()
+        .filter(movimiento -> movimiento.fueExtraido(fecha))
+        .map(Movimiento::getMonto)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
   private void setSaldo(BigDecimal saldo) {
     this.saldo = saldo;
-  }
-
-  public List<Movimiento> getMovimientos() {
-    return movimientos;
-  }
-
-  public BigDecimal getSaldo() {
-    return saldo;
   }
 
 }
