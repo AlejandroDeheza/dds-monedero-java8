@@ -13,7 +13,8 @@ import java.util.List;
 public class Cuenta {
 
   private BigDecimal saldo;
-  private final List<Movimiento> movimientos = new ArrayList<>();
+  private final List<Extraccion> extracciones = new ArrayList<>();
+  private final List<Deposito> depositos = new ArrayList<>();
 
   public Cuenta() {
     saldo = new BigDecimal(0);
@@ -23,8 +24,12 @@ public class Cuenta {
     saldo = montoInicial;
   }
 
-  public List<Movimiento> getMovimientos() {
-    return movimientos;
+  public List<Extraccion> getExtracciones() {
+    return extracciones;
+  }
+
+  public List<Deposito> getDepositos() {
+    return depositos;
   }
 
   public BigDecimal getSaldo() {
@@ -32,22 +37,22 @@ public class Cuenta {
   }
 
   public void poner(BigDecimal cuanto) {
-    realizarTransaccion(cuanto, getSaldo().add(cuanto), new Deposito(LocalDate.now(), cuanto),
-        this::validarQueNoSupereMaximaCantidadDepositosDiarios);
+    realizarTransaccion(cuanto, getSaldo().add(cuanto), this::validarQueNoSupereMaximaCantidadDepositosDiarios);
+    depositos.add(new Deposito(LocalDate.now(), cuanto));
   }
 
   public void sacar(BigDecimal cuanto) {
-    realizarTransaccion(cuanto, getSaldo().subtract(cuanto), new Extraccion(LocalDate.now(), cuanto), () -> {
+    realizarTransaccion(cuanto, getSaldo().subtract(cuanto), () -> {
       validarQueTengaSaldoSuficiente(cuanto);
       validarQueNoSupereExtracionDiariaMaxima(cuanto);
     });
+    extracciones.add(new Extraccion(LocalDate.now(), cuanto));
   }
 
   private void realizarTransaccion(
-      BigDecimal cuanto, BigDecimal saldoCorrespondiente, Movimiento movimiento, Runnable validaciones) {
+      BigDecimal cuanto, BigDecimal saldoCorrespondiente, Runnable validaciones) {
     validarQueNoSeaMontoNegativo(cuanto);
     validaciones.run();
-    movimientos.add(movimiento);
     this.setSaldo(saldoCorrespondiente);
   }
 
@@ -58,7 +63,7 @@ public class Cuenta {
   }
 
   private long cantidadDepositosDiarios() {
-    return getMovimientos().stream().filter(deposito -> deposito.fueDepositado(LocalDate.now())).count();
+    return getDepositos().stream().filter(deposito -> deposito.fueDepositado(LocalDate.now())).count();
   }
 
   private void validarQueNoSeaMontoNegativo(BigDecimal cuanto) {
@@ -85,7 +90,7 @@ public class Cuenta {
   }
 
   private BigDecimal getMontoExtraidoA(LocalDate fecha) {
-    return getMovimientos().stream()
+    return getExtracciones().stream()
         .filter(movimiento -> movimiento.fueExtraido(fecha))
         .map(Movimiento::getMonto)
         .reduce(BigDecimal.ZERO, BigDecimal::add);

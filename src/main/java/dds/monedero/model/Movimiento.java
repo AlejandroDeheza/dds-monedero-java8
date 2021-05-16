@@ -16,14 +16,6 @@ public abstract class Movimiento {
     return this.getFecha().equals(fecha);
   }
 
-  public Boolean fueDepositado(LocalDate fecha) {
-    return isDeposito() && esDeLaFecha(fecha);
-  }
-
-  public Boolean fueExtraido(LocalDate fecha) {
-    return isExtraccion() && esDeLaFecha(fecha);
-  }
-
   public BigDecimal getMonto() {
     return monto;
   }
@@ -31,9 +23,5 @@ public abstract class Movimiento {
   public LocalDate getFecha() {
     return fecha;
   }
-
-  public abstract Boolean isDeposito();
-
-  public abstract Boolean isExtraccion();
 
 }

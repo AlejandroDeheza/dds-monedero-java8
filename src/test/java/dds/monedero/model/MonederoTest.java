@@ -25,8 +25,8 @@ public class MonederoTest {
   void Poner() {
     cuenta.poner(new BigDecimal(1500));
     assertEquals(new BigDecimal(1500), cuenta.getSaldo());
-    assertEquals(true, cuenta.getMovimientos().get(0).isDeposito());
-    assertEquals(new BigDecimal(1500), cuenta.getMovimientos().get(0).getMonto());
+    assertEquals(1, cuenta.getDepositos().size());
+    assertEquals(new BigDecimal(1500), cuenta.getDepositos().get(0).getMonto());
   }
 
   @Test
@@ -42,20 +42,20 @@ public class MonederoTest {
     cuenta.poner(new BigDecimal(456));
     cuenta.poner(new BigDecimal(1900));
     assertEquals(new BigDecimal(3856), cuenta.getSaldo());
-    assertEquals(3, cuenta.getMovimientos().size());
+    assertEquals(3, cuenta.getDepositos().size());
   }
 
   @Test
   @DisplayName("si se ingresan mas de 3 montos se genera MaximaCantidadDepositosException")
   void MasDeTresDepositos() {
     assertThrows(MaximaCantidadDepositosException.class, () -> {
-          cuenta.poner(new BigDecimal(1500));
-          cuenta.poner(new BigDecimal(456));
-          cuenta.poner(new BigDecimal(1900));
-          cuenta.poner(new BigDecimal(245));
+      cuenta.poner(new BigDecimal(1500));
+      cuenta.poner(new BigDecimal(456));
+      cuenta.poner(new BigDecimal(1900));
+      cuenta.poner(new BigDecimal(245));
     });
     assertEquals(new BigDecimal(3856), cuenta.getSaldo());
-    assertEquals(3, cuenta.getMovimientos().size());
+    assertEquals(3, cuenta.getDepositos().size());
   }
 
   @Test
@@ -64,15 +64,16 @@ public class MonederoTest {
     cuenta.poner(new BigDecimal(1000));
     cuenta.sacar(new BigDecimal(500));
     assertEquals(new BigDecimal(500), cuenta.getSaldo());
-    assertEquals(2, cuenta.getMovimientos().size());
+    assertEquals(1, cuenta.getExtracciones().size());
+    assertEquals(1, cuenta.getDepositos().size());
   }
 
   @Test
   @DisplayName("si se extrae mas de lo que se tiene se genera SaldoMenorException")
   void ExtraerMasQueElSaldo() {
     assertThrows(SaldoMenorException.class, () -> {
-          cuenta.poner(new BigDecimal(90));
-          cuenta.sacar(new BigDecimal(1001));
+      cuenta.poner(new BigDecimal(90));
+      cuenta.sacar(new BigDecimal(1001));
     });
   }
 
