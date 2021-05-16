@@ -3,23 +3,17 @@ package dds.monedero.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Movimiento {
+public abstract class Movimiento {
   private LocalDate fecha;
   private BigDecimal monto;
-  private Boolean esDeposito;
 
-  public Movimiento(LocalDate fecha, BigDecimal monto, Boolean esDeposito) {
+  public Movimiento(LocalDate fecha, BigDecimal monto) {
     this.fecha = fecha;
     this.monto = monto;
-    this.esDeposito = esDeposito;
   }
 
-  public BigDecimal getMonto() {
-    return monto;
-  }
-
-  public LocalDate getFecha() {
-    return fecha;
+  public Boolean esDeLaFecha(LocalDate fecha) {
+    return this.fecha.equals(fecha);
   }
 
   public Boolean fueDepositado(LocalDate fecha) {
@@ -30,16 +24,16 @@ public class Movimiento {
     return isExtraccion() && esDeLaFecha(fecha);
   }
 
-  public Boolean esDeLaFecha(LocalDate fecha) {
-    return this.fecha.equals(fecha);
+  public BigDecimal getMonto() {
+    return monto;
   }
 
-  public Boolean isDeposito() {
-    return esDeposito;
+  public LocalDate getFecha() {
+    return fecha;
   }
 
-  public Boolean isExtraccion() {
-    return !esDeposito;
-  }
+  public abstract Boolean isDeposito();
+
+  public abstract Boolean isExtraccion();
 
 }
